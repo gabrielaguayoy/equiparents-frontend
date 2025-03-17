@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": [
+    "src/**/*", // Incluir todos los archivos en `src`
+    "next.config.mjs" // Asegúrate de que este archivo esté incluido
+  ]
+}

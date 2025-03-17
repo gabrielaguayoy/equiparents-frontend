@@ -1,0 +1,26 @@
+{
+  "name": "equiparent-frontend",
+  "version": "0.1.0",
+  "description": "Frontend for EquiParents app",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "keywords": ["nextjs", "react", "frontend"],
+  "dependencies": {
+    "@reduxjs/toolkit": "^latest",
+    "axios": "^latest",
+    "next": "^latest", 
+    "react": "^latest",
+    "react-dom": "^latest",
+    "react-redux": "^latest"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^latest",
+    "eslint": "^latest",
+    "eslint-config-next": "^latest"
+  }
+}
