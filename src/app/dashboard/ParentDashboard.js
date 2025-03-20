@@ -1,46 +1,49 @@
 // src/app/dashboard/ParentDashboard.js
-
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { useRouter } from "next/navigation";
-import ChildList from "./ChildList";
 import AccountModal from "../../components/AccountModal";
+import InviteParentForm from "./components/InviteParentForm";
+import ChildForm from "./components/ChildForm";
+import ChildEditForm from "./components/ChildEditForm";
+import ChildList from "./components/ChildList";
 
 const ParentDashboard = () => {
   const { user, loading } = useAuth();
-  const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
-  const [parentalAccountName, setParentalAccountName] = useState("");
-  const [newChild, setNewChild] = useState({ name: "", dateOfBirth: "" });
-  const [isAddingChild, setIsAddingChild] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [parentalAccount, setParentalAccount] = useState(null);
+  const [showInviteForm, setShowInviteForm] = useState(false);
+  const [showChildForm, setShowChildForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [selectedChild, setSelectedChild] = useState(null);
+  const [refreshChildren, setRefreshChildren] = useState(false);
 
+  /**
+   * 📌 Cargar la cuenta parental si el usuario tiene una
+   */
   useEffect(() => {
-    if (loading) return;
-    if (!user) {
-      router.push("/login");
-    } else if (user.parentalAccountId) {
-      setModalOpen(false);
-    } else {
+    if (!loading && user?.parentalAccountId) {
+      fetchParentalAccountDetails();
+    } else if (!user?.parentalAccountId) {
       setModalOpen(true);
     }
-  }, [loading, user, router]);
+  }, [loading, user]);
 
-  useEffect(() => {
-    if (user?.parentalAccountId) {
-      fetchParentalAccountName();
-    }
-  }, [user?.parentalAccountId]);
+  /**
+   * 📌 Obtener detalles de la cuenta parental
+   */
+  const fetchParentalAccountDetails = useCallback(async () => {
+    if (!user?.parentalAccountId) return;
 
-  const fetchParentalAccountName = async () => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/parental-accounts/${user.parentalAccountId}`,
         {
           method: "GET",
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
       );
 
@@ -48,46 +51,55 @@ const ParentDashboard = () => {
         throw new Error("No se pudo obtener la cuenta parental");
 
       const data = await response.json();
-      setParentalAccountName(data.data.name);
+      setParentalAccount(data.data);
     } catch (error) {
       console.error("❌ Error al obtener la cuenta parental:", error);
     }
-  };
+  }, [user]);
 
-  const handleAddChild = async (e) => {
-    e.preventDefault();
-    setIsAddingChild(true);
-    setErrorMsg("");
-
+  /**
+   * 📌 Crear una cuenta parental si no existe
+   */
+  const createParentalAccount = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/children`,
+        `${process.env.NEXT_PUBLIC_API_URL}/parental-accounts`,
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify({
-            name: newChild.name,
-            dateOfBirth: newChild.dateOfBirth,
-            parentalAccountId: user.parentalAccountId,
-            userId: user.id,
-          }),
+          body: JSON.stringify({ userId: user.id }),
         }
       );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "No se pudo agregar el hijo.");
-      }
+      if (!response.ok) throw new Error("No se pudo crear la cuenta parental");
 
-      setNewChild({ name: "", dateOfBirth: "" }); // Limpiar formulario
+      setModalOpen(false);
+      await fetchParentalAccountDetails();
     } catch (error) {
-      setErrorMsg(error.message);
-    } finally {
-      setIsAddingChild(false);
+      console.error("❌ Error al crear la cuenta parental:", error);
     }
+  };
+
+  /**
+   * 📌 Manejar la edición de un hijo
+   */
+  const handleEditChild = (child) => {
+    console.log("✏️ Editando hijo:", child);
+    setSelectedChild(child);
+    setShowEditForm(true);
+  };
+
+  /**
+   * 📌 Actualizar la lista de hijos después de agregar/editar
+   */
+  const handleChildUpdated = () => {
+    console.log("🔄 Lista de hijos actualizada");
+    setRefreshChildren((prev) => !prev);
+    setShowChildForm(false);
+    setShowEditForm(false);
   };
 
   if (loading) return <p>Cargando...</p>;
@@ -96,55 +108,63 @@ const ParentDashboard = () => {
     <div>
       <h1>Bienvenido al Dashboard de Padres</h1>
       {user.parentalAccountId ? (
-        <h2 style={styles.accountDisplay}>{parentalAccountName}</h2>
+        <h2>{parentalAccount?.name || "Cuenta sin nombre"}</h2>
       ) : (
         modalOpen && (
           <AccountModal
             onClose={() => setModalOpen(false)}
-            onCreateAccount={() => console.log("Crear cuenta")}
+            onCreateAccount={createParentalAccount}
           />
         )
       )}
 
-      <ChildList />
+      {user.parentalAccountId && parentalAccount && (
+        <>
+          {/* 🔹 Sección de progenitores */}
+          <div>
+            <h2>Progenitores</h2>
+            {parentalAccount.users.length > 0 ? (
+              <ul>
+                {parentalAccount.users.map((parent) => (
+                  <li key={parent.id}>
+                    {parent.firstName} {parent.lastName}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No hay otros progenitores registrados.</p>
+            )}
+            {parentalAccount.users.length === 1 && (
+              <button onClick={() => setShowInviteForm((prev) => !prev)}>
+                Invitar a otro progenitor
+              </button>
+            )}
+            {showInviteForm && <InviteParentForm />}
+          </div>
+
+          {/* 🔹 Sección de hijos */}
+          <div>
+            <h2>Hijos</h2>
+            <button onClick={() => setShowChildForm(true)}>Agregar hijo</button>
+            {showChildForm && (
+              <ChildForm
+                onChildAdded={handleChildUpdated}
+                onCancel={() => setShowChildForm(false)}
+              />
+            )}
+            {showEditForm && selectedChild && (
+              <ChildEditForm
+                child={selectedChild}
+                onChildUpdated={handleChildUpdated}
+                onCancel={() => setShowEditForm(false)}
+              />
+            )}
+            <ChildList key={refreshChildren} onEditChild={handleEditChild} />
+          </div>
+        </>
+      )}
     </div>
   );
-};
-
-const styles = {
-  accountDisplay: {
-    fontSize: "12px",
-    color: "#666",
-    fontWeight: "normal",
-    textTransform: "none",
-    float: "right",
-    marginTop: "-30px",
-  },
-  childFormContainer: {
-    marginTop: "20px",
-    padding: "15px",
-    border: "1px solid #ddd",
-    borderRadius: "8px",
-    background: "#f9f9f9",
-  },
-  childForm: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-  },
-  input: {
-    padding: "8px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-  },
-  button: {
-    padding: "8px",
-    backgroundColor: "#0070f3",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
 };
 
 export default ParentDashboard;

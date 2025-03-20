@@ -1,20 +1,31 @@
 // src/app/layout.js
+"use client";
 
-import Header from "../components/Header"; // Asegúrate de importar correctamente
-import { AuthProvider } from "../context/AuthContext"; // Importa el AuthProvider
+import { AuthProvider } from "../context/AuthContext";
+import Header from "../components/Header";
+import "../styles/globals.css";
 
-export default function Layout({ children }) {
+export default function RootLayout({ children }) {
   return (
-    <html lang="es">
-      <head>
-        <title>Equi·Parents</title>
-      </head>
-      <body>
-        <AuthProvider>
+    <AuthProvider>
+      <html lang="es">
+        <head>
+          <meta charSet="UTF-8" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+          <title>Equi·Parents</title>
+          <link
+            href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@300;400;700&display=swap"
+            rel="stylesheet"
+          />
+        </head>
+        <body>
           <Header />
-          <div className="container">{children}</div>
-        </AuthProvider>
-      </body>
-    </html>
+          <main className="container">{children}</main>
+        </body>
+      </html>
+    </AuthProvider>
   );
 }

@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useAuth } from "../../../context/AuthContext"; // Ajustar la ruta según tu estructura
 
 const ParentalAccountDetailPage = ({ params }) => {
@@ -17,7 +17,7 @@ const ParentalAccountDetailPage = ({ params }) => {
 
     // Redirigir si no hay usuario autenticado
     if (!user) {
-      router.push("/login");
+      router.push("/auth/login");
     } else {
       fetchAccountData(); // Obtener la información de la cuenta parental
     }

@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useAuth } from "../../context/AuthContext"; // Ajustar la ruta según tu estructura
 
 const RoleDetailPage = ({ params }) => {
@@ -17,7 +17,7 @@ const RoleDetailPage = ({ params }) => {
 
     // Redirigir si no hay usuario autenticado o no es admin
     if (!user || user.roleId !== "admin") {
-      router.push("/login");
+      router.push("/auth/login");
     } else {
       fetchRoleData(); // Obtener la información del rol específico
     }

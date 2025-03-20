@@ -2,24 +2,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import UserCard from "../../components/UserCard"; // Componente para mostrar información del usuario
-import { useAuth } from "../../context/AuthContext"; // Hook de autenticación
+import { redirect } from "next/navigation";
+import UserCard from "../../components/UserCard";
+import { useAuth } from "../../context/AuthContext";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const UsersPage = () => {
-  const { user, loading } = useAuth(); // Obtener información de autenticación
+  const { user, loading } = useAuth();
   const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    if (loading) return; // Esperar a que se cargue el estado
+    if (loading) return;
 
-    // Redirigir si no hay un usuario autenticado o si no es admin
-    if (!user || user.roleId !== "admin") {
+    if (!user || user.roleName !== "admin") {
       router.push("/login");
     } else {
-      fetchUsers(); // Llamar a la API para obtener la lista de usuarios
+      fetchUsers();
     }
   }, [loading, user, router]);
 
@@ -33,37 +34,59 @@ const UsersPage = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Error al obtener usuarios"); // Lanzar error si la respuesta no es válida
+        throw new Error("Error al obtener usuarios");
       }
 
       const data = await response.json();
-      setUsers(data.data || []); // Asegúrate de manejar correctamente la respuesta
+      setUsers(data.data || []);
     } catch (error) {
-      setError(error.message || "Error de conexión con el servidor."); // Mensaje de error
+      setError(error.message || "Error de conexión con el servidor.");
       console.error("Error de conexión:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  if (loading) {
-    return <p>Cargando...</p>; // Mensaje de carga
-  }
+  if (loading || isLoading) return <LoadingSpinner />; // 🚀 Muestra el Loader
 
   return (
     <div>
       <h1>Lista de Usuarios</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}{" "}
-      {/* Mostrar mensaje de error */}
+      {error && <p style={{ color: "red" }}>{error}</p>}
       {users.length === 0 ? (
         <p>No hay usuarios disponibles.</p>
       ) : (
         <div>
           {users.map((user) => (
-            <UserCard key={user.id} user={user} /> // Renderiza cada usuario utilizando el componente UserCard
+            <UserCard key={user.id} user={user} />
           ))}
         </div>
       )}
     </div>
   );
+};
+
+// 🎨 Estilos mejorados
+const styles = {
+  container: {
+    padding: "20px",
+    maxWidth: "800px",
+    margin: "0 auto",
+  },
+  heading: {
+    textAlign: "center",
+    fontSize: "24px",
+    marginBottom: "16px",
+  },
+  error: {
+    color: "red",
+    fontSize: "16px",
+    textAlign: "center",
+  },
+  userList: {
+    display: "grid",
+    gap: "10px",
+  },
 };
 
 export default UsersPage;

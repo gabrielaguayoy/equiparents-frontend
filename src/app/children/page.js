@@ -3,8 +3,8 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext"; // Importar contexto de autenticación
-import ChildCard from "../../components/ChildCard"; // Componente para mostrar información del hijo
-import { useRouter } from "next/navigation"; // Para la navegación
+import ChildCard from "../dashboard/components/ChildCard"; // Componente para mostrar información del hijo
+import { redirect } from "next/navigation"; // Para la navegación
 
 const ChildrenPage = () => {
   const { user, loading } = useAuth(); // Obtener estado de autenticación
@@ -17,7 +17,7 @@ const ChildrenPage = () => {
 
     // Redirigir si no hay usuario autenticado
     if (!user) {
-      router.push("/login");
+      router.push("/auth/login");
     } else {
       fetchChildren(); // Llamar a la función para obtener hijos
     }

@@ -1,35 +1,37 @@
 // src/app/page.js
-
-"use client"; // Usar el cliente Next.js
+"use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "../context/AuthContext"; // Asegúrate de que la ruta es correcta
+import { redirect } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
 
 const HomePage = () => {
-  const { user } = useAuth(); // Obtener el estado de autenticación del contexto
-  const router = useRouter();
+  const { user } = useAuth();
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      user ? router.push("/dashboard") : router.push("/login"); // Redirigir según la autenticación
-    }, 3000); // Tiempo de espera en milisegundos (3 segundos)
-
-    return () => clearTimeout(timeout); // Limpiar el timeout al desmontar
-  }, [user, router]);
+    if (user) {
+      redirect("/dashboard"); // ✅ Redirección inmediata si el usuario está autenticado
+    } else {
+      redirect("/auth/login"); // ✅ Redirección si no está autenticado
+    }
+  }, [user]);
 
   return (
     <div style={styles.container}>
-      <img src="/images/logo.png" alt="Equi·Parents Logo" style={styles.logo} />
-      <h1>Bienvenido a Equi·Parents</h1>
+      <img
+        src="/images/logo.png"
+        alt="Logo de Equi·Parents"
+        style={styles.logo}
+      />
+      <h1>
+        Bienvenido a <span style={styles.brand}>Equi·Parents</span>
+      </h1>
       <p>by Equi Innova</p>
-      <p style={styles.subtext}>Cargando, por favor espera...</p>{" "}
-      {/* Mensaje de carga */}
+      <p style={styles.subtext}>Cargando, por favor espera...</p>
     </div>
   );
 };
 
-// Estilos en línea para el contenedor
 const styles = {
   container: {
     display: "flex",
@@ -37,15 +39,20 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     height: "100vh",
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#F0EAD6", // Color del diseño
+    textAlign: "center",
   },
   logo: {
-    maxWidth: "300px", // Tamaño máximo del logo
+    maxWidth: "250px",
     marginBottom: "20px",
+  },
+  brand: {
+    color: "#0070f3",
   },
   subtext: {
     marginTop: "10px",
-    color: "#555", // Color gris para el texto secundario
+    color: "#333",
+    fontSize: "14px",
   },
 };
 

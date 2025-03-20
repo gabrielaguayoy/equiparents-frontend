@@ -1,0 +1,123 @@
+/* src/styles/globals.css */
+
+/* ======== VARIABLES ======== */
+/* ======== VARIABLES ======== */
+:root {
+  --primary-color: #a5dc6f;
+  --primary-color-rgb: 165, 220, 111;
+  --secondary-color: #67146d;
+  --accent-color: #67146d;
+  --success-color: #a5dc6f;
+  --background-color: #fff;
+  --text-color: #222222;
+  --border-color: #cccccc;
+  --border-radius: 6px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ======== RESETEO Y TIPOGRAFÍA ======== */
+html,
+body {
+  font-family: "Lato", "Montserrat", sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.5;
+}
+h1,
+h2,
+h3 {
+  color: var(--accent-color);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* ======== CONTENEDORES ======== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ======== FORMULARIOS ======== */
+form {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--primary-color);
+}
+
+/* ======== BOTONES ======== */
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: var(--secondary-color);
+}
+
+.error-message {
+  color: var(--error-color);
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* ======== TABLAS ======== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th,
+td {
+  border: 1px solid var(--border-color);
+  padding: 8px;
+  text-align: left;
+}
+
+/* ======== MODALES ======== */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  box-shadow: var(--box-shadow);
+  z-index: 1000;
+}

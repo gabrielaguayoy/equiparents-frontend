@@ -1,64 +1,59 @@
 // src/app/components/Header.js
 "use client";
 
+import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import styles from "./Header.module.css"; // ✅ Importación del CSS Module
 
 const Header = () => {
   const { user, logout } = useAuth();
+  const router = useRouter();
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    setUserData(user);
+  }, [user]);
+
+  const handleLogout = () => {
+    logout();
+    router.replace("/auth/login");
+  };
 
   return (
-    <header style={styles.header}>
-      <h1>Equi·Parents</h1>
-      {user ? (
-        <>
-          <span style={styles.welcome}>
-            Bienvenido, {user.firstName} ({user.roleName})
-          </span>
-          <button onClick={logout} style={styles.button}>
-            Cerrar sesión
-          </button>
-          <Link href="/dashboard" style={styles.button}>
-            Dashboard
-          </Link>
-        </>
-      ) : (
-        <>
-          <Link href="/login" style={styles.button}>
-            Iniciar sesión
-          </Link>
-          <Link href="/register" style={styles.button}>
-            Registrarse
-          </Link>
-        </>
-      )}
+    <header className={styles.header}>
+      <h1 className={styles.logo}>Equi·Parents</h1>
+      <nav className={styles.nav}>
+        {userData ? (
+          <>
+            <span className={styles.welcome}>
+              {userData.firstName} {userData.lastName} ({userData.roleName})
+            </span>
+            <Link href="/dashboard" className={styles.navLink}>
+              Dashboard
+            </Link>
+            <button
+              onClick={handleLogout}
+              className={styles.logoutButton}
+              aria-label="Cerrar sesión"
+            >
+              Cerrar sesión
+            </button>
+          </>
+        ) : (
+          <>
+            <Link href="/auth/login" className={styles.navLink}>
+              Iniciar sesión
+            </Link>
+            <Link href="/auth/register" className={styles.navLink}>
+              Registrarse
+            </Link>
+          </>
+        )}
+      </nav>
     </header>
   );
-};
-
-// Estilos del header
-const styles = {
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "10px 20px",
-    backgroundColor: "#0070f3",
-    color: "white",
-  },
-  button: {
-    color: "white",
-    marginLeft: "10px",
-    textDecoration: "none",
-    padding: "10px",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    backgroundColor: "transparent",
-  },
-  welcome: {
-    marginRight: "10px",
-  },
 };
 
 export default Header;

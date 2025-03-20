@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext"; // Importar el contexto de autenticación
-import { useRouter } from "next/navigation"; // Para la navegación
+import { redirect } from "next/navigation"; // Para la navegación
 import ParentalAccountCard from "../../components/ParentalAccountCard"; // Componente para mostrar información de cuenta parental
 
 const ParentalAccountsPage = () => {
@@ -17,7 +17,7 @@ const ParentalAccountsPage = () => {
 
     // Redirigir si no hay un usuario autenticado o no es un administrador
     if (!user || user.roleId !== "admin") {
-      router.push("/login");
+      router.push("/auth/login");
     } else {
       fetchAccounts(); // Obtener la lista de cuentas parentales
     }

@@ -1,15 +1,15 @@
-// src/app/hooks/useFetchChildren.js
+// src/hooks/useFetchChildren.js
 
 import { useEffect, useState, useCallback } from "react";
 
 const useFetchChildren = (token) => {
-  const [children, setChildren] = useState([]); // Estado para hijos
-  const [loading, setLoading] = useState(true); // Estado de carga
-  const [error, setError] = useState(""); // Estado de error
+  const [children, setChildren] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const fetchChildren = useCallback(async () => {
     if (!token) {
-      setError("No se puede acceder a los hijos sin un token.");
+      setError("⚠ No se puede acceder a los hijos sin un token.");
       setLoading(false);
       return;
     }
@@ -22,20 +22,22 @@ const useFetchChildren = (token) => {
         `${process.env.NEXT_PUBLIC_API_URL}/children`,
         {
           method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
       );
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Error al obtener los hijos");
+        throw new Error(`Error HTTP: ${response.status}`);
       }
 
       const data = await response.json();
-      setChildren(data.data || []); // ✅ Actualizar lista de hijos
+      setChildren(data.data || []);
     } catch (err) {
-      setError(err.message || "Error de conexión con el servidor.");
-      console.error("Error de conexión con el servidor:", err);
+      setError(err.message || "❌ Error de conexión con el servidor.");
+      console.error("Error al obtener hijos:", err);
     } finally {
       setLoading(false);
     }
@@ -45,7 +47,7 @@ const useFetchChildren = (token) => {
     fetchChildren();
   }, [fetchChildren]);
 
-  return { children, loading, error, refetch: fetchChildren }; // ✅ Devolvemos `refetch`
+  return { children, loading, error, refetch: fetchChildren };
 };
 
 export default useFetchChildren;

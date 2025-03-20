@@ -12,12 +12,12 @@ export function middleware(request) {
       return NextResponse.next(); // Permitir la solicitud si el token es válido
     } catch (error) {
       console.error("JWT no válido:", error.message);
-      return NextResponse.redirect(new URL("/login", request.url)); // Redirigir a login si el JWT no es válido
+      return NextResponse.redirect(new URL("/auth/login", request.url)); // Redirigir a login si el JWT no es válido
     }
   }
 
   console.warn("No se proporcionó token, redirigiendo a login.");
-  return NextResponse.redirect(new URL("/login", request.url)); // Redirigir a login si no hay token
+  return NextResponse.redirect(new URL("/auth/login", request.url)); // Redirigir a login si no hay token
 }
 
 // Definir rutas protegidas

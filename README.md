@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+EquiParents - Frontend
 
-## Getting Started
+Este es el frontend de EquiParents, desarrollado con Next.js y React.
 
-First, run the development server:
+🚀 Requisitos Previos
 
-```bash
+Asegúrate de tener instalado:
+
+🟢 Node.js (versión 18 o superior)
+
+🟢 Git
+
+🟢 Visual Studio Code
+
+📥 Instalación
+
+1️⃣ Clonar el repositorio
+
+git clone git@github.com:gabrielaguayoy/equiparents-frontend.git
+cd equiparents-frontend
+
+2️⃣ Instalar dependencias
+
+npm install
+
+3️⃣ Configurar variables de entorno
+
+Crea un archivo .env.local en la raíz del proyecto y copia lo siguiente:
+
+NEXT_PUBLIC_API_URL="http://localhost:5000/api"
+
+4️⃣ Iniciar el frontend
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5️⃣ Abrir en el navegador
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+🖥 Uso en Visual Studio Code
 
-## Learn More
+Abre VS Code y selecciona File > Open Folder y elige equiparents-frontend
 
-To learn more about Next.js, take a look at the following resources:
+Abre una terminal integrada con:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Ctrl + ñ (Windows/Linux)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Cmd + ñ (Mac)
 
-## Deploy on Vercel
+Ejecuta npm run dev para iniciar la aplicación en localhost
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Abre el navegador en http://localhost:3000
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+📂 Estructura del Proyecto
+
+equiparents-frontend/
+│── src/
+│ ├── app/ # Páginas de la aplicación
+│ ├── components/ # Componentes reutilizables
+│ ├── context/ # Contexto de autenticación
+│ ├── hooks/ # Hooks personalizados
+│ ├── styles/ # Estilos globales y módulos CSS
+│── .env.local # Variables de entorno
+│── package.json
+│── README.md
+
+🎨 Colores del Proyecto
+
+El diseño del frontend utiliza los siguientes colores:
+
+🔵 Azul Principal: #0070f3
+
+🟢 Verde Pastel: #B7C9A4
+
+🟠 Naranja Suave: #D57E5A
+
+⚫ Gris Oscuro: #333333
+
+🔷 Azul Oscuro: #004AAD
+
+🏵️ Crema: #F0EAD6
+
+🚀 Despliegue
+
+Para desplegar el frontend en Vercel:
+
+vercel login
+vercel
+
+Con esto puedes correr EquiParents en local y desplegarlo fácilmente. 🎉

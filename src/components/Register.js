@@ -44,7 +44,7 @@ const Register = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/register`,
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
         {
           method: "POST",
           headers: {
@@ -80,7 +80,7 @@ const Register = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={styles.form}>
+    <form onSubmit={handleSubmit}>
       <h2>Registro de Usuario</h2>
       {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
       <Input
